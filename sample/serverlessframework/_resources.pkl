@@ -1,0 +1,30 @@
+Resources {
+    testS3Bucket {
+        Type = "AWS::S3::Bucket"
+        Properties {
+            BucketName = "hoge-ynishimura-bucket"
+        }
+    }
+    testTable {
+        Type = "AWS::DynamoDB::Table"
+        Properties {
+            TableName = "${self:custom.env}-${self:service}"
+            AttributeDefinitions = new Listing{
+                new {
+                    AttributeName = "email"
+                    AttributeType = "S"
+                }
+            }
+            KeySchema = new Listing{
+                new {
+                    AttributeName = "email"
+                    KeyType = "HASH"
+                }
+            }
+            ProvisionedThroughput {
+                ReadCapacityUnits = 1
+                WriteCapacityUnits = 1
+            }
+        }
+    }
+}

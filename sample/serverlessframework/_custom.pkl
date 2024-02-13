@@ -1,0 +1,19 @@
+env: String = "${opt:env, 'itg'}"
+dynamodb {
+    start {
+        port = 8000
+        inMemory = true
+        migrate = true
+        seed = true
+    }
+    seed {
+        development {
+            sources = new Listing{
+                new {
+                    table = "${self:provider.environment.DYNAMODB_TABLE}"
+                    sources = List("./data/test.json")
+                }
+            }
+        }
+    }
+}

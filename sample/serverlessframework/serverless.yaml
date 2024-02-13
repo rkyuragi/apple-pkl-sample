@@ -1,0 +1,110 @@
+service: test-blog # NOTE: update this with your service name
+
+provider:
+  name: aws
+  runtime: python3.7
+  stage: v1
+  apiName: ${self:custom.env}-${self:service}
+  environment:
+    DYNAMODB_TABLE: ${self:custom.env}-${self:service}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+
+plugins:
+  - serverless-dynamodb-local
+  
+custom:
+  env: ${opt:env, 'itg'}
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+      seed: true
+    seed:
+      development:
+        sources:
+          - table: ${self:provider.environment.DYNAMODB_TABLE}
+            sources: [./data/test.json]
+
+package:
+  individually: true
+  include:
+    - handler.py
+  exclude:
+    - "**"
+
+functions:
+  hello:
+    handler: handler.hello
+    events:
+      - http:
+          path: sample/test
+          method: get
+  create:
+    handler: handler.create
+    events:
+      - http:
+          path: todos
+          method: post
+          cors: true
+
+  list:
+    handler: handler.list
+    events:
+      - http:
+          path: todos
+          method: get
+          cors: true
+
+  get:
+    handler: handler.get
+    events:
+      - http:
+          path: todos/{id}
+          method: get
+          cors: true
+
+  update:
+    handler: handler.update
+    events:
+      - http:
+          path: todos/{id}
+          method: put
+          cors: true
+
+  delete:
+    handler: handler.delete
+    events:
+      - http:
+          path: todos/{id}
+          method: delete
+          cors: true
+
+resources:
+  Resources:
+    testS3Bucket:
+      Type: "AWS::S3::Bucket"
+      Properties:
+        BucketName: hoge-ynishimura-bucket
+    testTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:custom.env}-${self:service}
+        AttributeDefinitions:
+          - AttributeName: email
+            AttributeType: S
+        KeySchema:
+          - AttributeName: email
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

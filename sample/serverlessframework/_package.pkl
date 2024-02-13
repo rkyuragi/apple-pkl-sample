@@ -1,0 +1,3 @@
+individually: Boolean = true
+include = List("handler.py")
+exclude = List("**")

@@ -1,0 +1,19 @@
+import "_provider.pkl"
+import "_custom.pkl"
+import "_package.pkl"
+import "_functions.pkl"
+import "_resources.pkl"
+
+service = "test-blog"
+
+provider = _provider
+
+plugins = List("serverless-dynamodb-local")
+
+custom = _custom
+
+package = _package
+
+functions = _functions
+
+resources = _resources

@@ -1,0 +1,21 @@
+name: String = "aws"
+runtime: String = "python3.7"
+stage: String = "v1"
+apiName: String = "${self:custom.env}-${self:service}"
+environment {
+    DYNAMODB_TABLE = "${self:custom.env}-${self:service}"
+}
+iamRoleStatements = new Listing{
+    new {
+        Effect = "Allow"
+        Action = List(
+            "dynamodb:Query",
+            "dynamodb:Scan",
+            "dynamodb:GetItem",
+            "dynamodb:PutItem",
+            "dynamodb:UpdateItem",
+            "dynamodb:DeleteItem"
+        )
+        Resource = "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+    }
+}

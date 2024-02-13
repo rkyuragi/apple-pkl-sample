@@ -1,0 +1,92 @@
+class Http {
+    path: String
+    method: "get"|"post"|"put"|"delete"
+    cors: Boolean|Null
+}
+
+class Event {
+    http: Http
+}
+
+class Function {
+    handler: String
+    events: Listing<Event>
+}
+
+hello: Function = new {
+    handler = "handler.hello"
+    events = new Listing{
+        new Event{
+            http = new Http{
+                path = "sample/test"
+                method = "get"
+                cors = null
+            }
+        }
+    }
+}
+
+create: Function = new {
+    handler = "handler.create"
+    events = new Listing{
+        new Event{
+            http = new Http{
+                path = "todos"
+                method = "post"
+                cors = true
+            }
+        }
+    }
+}
+
+list: Function = new {
+    handler = "handler.list"
+    events = new Listing{
+        new Event{
+            http = new Http{
+                path = "todos"
+                method = "get"
+                cors = true
+            }
+        }
+    }
+}
+
+get: Function = new {
+    handler = "handler.get"
+    events = new Listing{
+        new Event{
+            http = new Http{
+                path = "todos/{id}"
+                method = "get"
+                cors = true
+            }
+        }
+    }
+}
+
+update: Function = new {
+    handler = "handler.update"
+    events = new Listing{
+        new Event{
+            http = new Http{
+                path = "todos/{id}"
+                method = "put"
+                cors = true
+            }
+        }
+    }
+}
+
+`delete`: Function = new {
+    handler = "handler.delete"
+    events = new Listing{
+        new Event{
+            http = new Http{
+                path = "todos/{id}"
+                method = "delete"
+                cors = true
+            }
+        }
+    }
+}
