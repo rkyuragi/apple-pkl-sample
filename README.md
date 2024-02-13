@@ -42,7 +42,7 @@ serverless frameworkのyamlファイルをpklに変換してみたコード
 #### yamlファイルの作成
 
 ```shell
-pkl eval -f yaml sample/serverlessframework/serverless.pkl -o sample/serverlessframework/serverless-output.yaml
+./pkl eval -f yaml sample/serverlessframework/serverless.pkl -o sample/serverlessframework/serverless-output.yaml
 ```
 
 #### Pklから作成したyamlと元になったyamlを比較して問題ないことを確認
